@@ -1,11 +1,12 @@
-// Sample API response for a class:
+// Sample API response for a ride:
 var mockClass = {
          class_type_ids:[
             "7579b9edbdf9464fa19eb58193897a73"
          ],
          content_provider:"peloton",
          content_format:"video",
-         description:"Bursts of effort alternated with free weight segments, this ride will challenge your mind and strengthen your body from the inside out.",
+         description:"Bursts of effort alternated with free weight segments, this ride " +
+           "will challenge your mind and strengthen your body from the inside out.",
          difficulty_estimate:0.0,
          overall_estimate:0.0,
          difficulty_rating_avg:0.0,
@@ -89,7 +90,6 @@ function createTestEvent() {
     end: {
       dateTime: new Date(endTime).toISOString()
     },
-    // TODO: update color based on class type
     colorId: 10,
     extendedProperties: {
       shared: {

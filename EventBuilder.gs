@@ -13,8 +13,9 @@ function createEvent(ride, encoreClassStartTime) {
     end: {
       dateTime: new Date(endTime).toISOString()
     },
-    // TODO: update color based on class type
+    // TODO: update color based on class type (once querying supports all class types)
     colorId: !!encoreClassStartTime ? 3 : 2,
+    // TODO: find a use for the non-classId extended properties or consider removing them, as they are not currently used
     extendedProperties: {
       shared: {
         classLength: ride.duration / 60,
@@ -53,11 +54,30 @@ function getUpcomingPelotonCalendarEvents() {
       }
     }
   } else {
-    Logger.log('No events found.');
+    Logger.log('No exisiting events found.');
   }
   return existingEvents;
 }
 
+function deleteEvent(eventId) {
+  try {
+    CalendarApp.getCalendarById(calendarId).getEventById(eventId).deleteEvent();
+    Logger.log('Event ' + eventId + ' deleted.');
+  } catch(e) {
+    console.error("Error deleting event " + eventId + " from calendar " + calendarId + ". Error: " + e);
+  }
+}
+
+// used for testing
+function deleteAllEvents() {
+  var existingEvents = getAllPelotonCalendarEventIds();
+  for (var i = 0; i < existingEvents.length; i++) {
+    var eventId = existingEvents[i];
+    deleteEvent(eventId);
+  }
+}
+
+// used for testing
 function getAllPelotonCalendarEventIds() {
   var eventIds = [];
   var startDate = new Date(2018, 11, 24, 10, 33, 30, 0);
@@ -84,21 +104,4 @@ function getAllPelotonCalendarEventIds() {
   }
   Logger.log('Existing event count: ' + eventIds.length);
   return eventIds;
-}
-
-function deleteEvent(eventId) {
-  try {
-    CalendarApp.getCalendarById(calendarId).getEventById(eventId).deleteEvent();
-    Logger.log('Event ' + eventId + ' deleted.');
-  } catch(e) {
-    console.error("Error deleting event " + eventId + " from calendar " + calendarId + ". Error: " + e);
-  }
-}
-
-function deleteAllEvents() {
-  var existingEvents = getAllPelotonCalendarEventIds();
-  for (var i = 0; i < existingEvents.length; i++) {
-    var eventId = existingEvents[i];
-    deleteEvent(eventId);
-  }
 }
