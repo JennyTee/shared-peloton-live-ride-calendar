@@ -1,9 +1,11 @@
 var data;
 var instructorList;
 var classList;
-//var query = '"Apps Script" stars:">=100"';
-var url = 'https://api.onepeloton.com/api/v3/ride/live?exclude_complete=true&content_provider=studio&exclude_live_in_studio_only=true&browse_category=cycling&start=1602738000&end=1603947599';
-  // + '&q=' + encodeURIComponent(query);
+var encoreClassData;
+var queryStartTime = Math.round(Date.now() / 1000);
+// get end time 13 days in future
+var queryEndTime = queryStartTime + 1213199;
+var url = `https://api.onepeloton.com/api/v3/ride/live?exclude_complete=true&content_provider=studio&exclude_live_in_studio_only=true&browse_category=cycling&start=${queryStartTime}&end=${queryEndTime}`;
 
 function updatePelotonLiveRideCalendar() {
   var existingEvents = getUpcomingPelotonCalendarEvents();
@@ -14,20 +16,28 @@ function updatePelotonLiveRideCalendar() {
   
   instructorList = data.instructors;
   classList = data.rides;
+  encoreClassData = data.data;
+  
   Logger.log('There are ' + classList.length + ' rides returned from the Peloton API, including Encore rides.');
   
   for (var i = 0; i < classList.length; i++) {
+    var encoreClassStartTime = null;
     var pelotonClass = classList[i];
     var hasMatchingCalendarEvent = existingEvents.has(pelotonClass.id);
-    if (pelotonClass.original_air_time != null) {
+    var isEncore = pelotonClass.original_air_time != null;
+    
+    if (isEncore) {
       Logger.log(pelotonClass.title + ' is an Encore class.');
-    } else if (hasMatchingCalendarEvent) {
+      encoreClassStartTime = getMatchingEncoreClassStartTime(pelotonClass.id);
+    }
+
+    if (hasMatchingCalendarEvent) {
       var existingEvent = existingEvents.get(pelotonClass.id);
-      checkForEventUpdates(pelotonClass, existingEvent);
+      checkForEventUpdates(pelotonClass, existingEvent, encoreClassStartTime);
       Logger.log('ClassId ' + pelotonClass.id + ' already has a calendar event.');
       existingEvents.delete(pelotonClass.id);
     } else {
-      createEvent(pelotonClass);
+      createEvent(pelotonClass, encoreClassStartTime);
     }
   }
   

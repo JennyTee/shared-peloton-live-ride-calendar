@@ -1,4 +1,4 @@
-function checkForEventUpdates(pelotonClass, existingEvent){
+function checkForEventUpdates(pelotonClass, existingEvent, encoreClassStartTime){
   // Extended properties are not currently checked for differences, as they are hidden to the end user.
   var changesNeeded = false;
   
@@ -18,7 +18,7 @@ function checkForEventUpdates(pelotonClass, existingEvent){
     Logger.log(existingEvent.id + ' class description updated');
   }
   
-  var startTimeEpochTime = pelotonClass.scheduled_start_time * 1000;
+  var startTimeEpochTime = !!encoreClassStartTime ? encoreClassStartTime * 1000 : pelotonClass.scheduled_start_time * 1000;
   var endTimeEpochTime = startTimeEpochTime + (pelotonClass.duration * 1000);
   
   var existingStartTime = existingEvent.getStart().getDateTime();
@@ -38,6 +38,6 @@ function checkForEventUpdates(pelotonClass, existingEvent){
   
   if (changesNeeded) {
     deleteEvent(existingEvent.id);
-    createEvent(pelotonClass);
+    createEvent(pelotonClass, encoreClassStartTime);
   }
 }

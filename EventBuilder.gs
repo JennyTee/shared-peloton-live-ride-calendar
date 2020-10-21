@@ -1,7 +1,7 @@
 var calendarId = 'primary';
 
-function createEvent(ride) {
-  var startTime = ride.scheduled_start_time * 1000;
+function createEvent(ride, encoreClassStartTime) {
+  var startTime = !!encoreClassStartTime ? encoreClassStartTime * 1000 : ride.scheduled_start_time * 1000;
   var endTime = startTime + (ride.duration * 1000);
   var event = {
     summary: ride.title,
@@ -14,7 +14,7 @@ function createEvent(ride) {
       dateTime: new Date(endTime).toISOString()
     },
     // TODO: update color based on class type
-    colorId: 11,
+    colorId: !!encoreClassStartTime ? 3 : 2,
     extendedProperties: {
       shared: {
         classLength: ride.duration / 60,
