@@ -16,3 +16,11 @@
        TODO: remove extended properties (except for classId) or find another use for them
        Consider adding extended property values into event description instead (this will complicate diff checking).
  */
+
+function buildDailyTrigger() {
+ ScriptApp.newTrigger('updatePelotonLiveRideCalendar')
+      .timeBased()
+      .everyDays(1)
+      .atHour(5)
+      .create();
+}
