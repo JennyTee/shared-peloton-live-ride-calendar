@@ -4,18 +4,20 @@ function checkForEventUpdates(pelotonClass, existingEvent, encoreClassStartTime)
   
   if (pelotonClass.title != existingEvent.summary) {
     changesNeeded = true;
-    Logger.log(existingEvent.id + ' class title updated');
+    Logger.log('Class title updated. Previous title: ' + existingEvent.summary + '. New title: ' + pelotonClass.title + '.');
   };
   
   var instructorName = getInstructorName(pelotonClass.instructor_id);
   if (instructorName != existingEvent.location) {
     changesNeeded = true;
-    Logger.log(existingEvent.id + ' instructor updated');
+    Logger.log('Instructor for ' + pelotonClass.title + ' updated. Previous instructor: ' + existingEvent.location + 
+      '. New instructor: ' + instructorName + '.');
   }
   
   if (pelotonClass.description != existingEvent.description) {
     changesNeeded = true;
-    Logger.log(existingEvent.id + ' class description updated');
+    Logger.log('Description for ' + pelotonClass.title + ' updated. Previous description: ' + existingEvent.description + 
+      '. New description: ' + pelotonClass.description + '.');
   }
   
   var startTimeEpochTime = !!encoreClassStartTime ? encoreClassStartTime * 1000 : pelotonClass.scheduled_start_time * 1000;
@@ -28,16 +30,18 @@ function checkForEventUpdates(pelotonClass, existingEvent, encoreClassStartTime)
 
   if (startTimeEpochTime != existingStartTimeEpochTime) {
     changesNeeded = true;
-    Logger.log(existingEvent.id + ' start time updated');
+    Logger.log('Start time for ' + pelotonClass.title + ' updated. Previous start time: ' + existingStartTime + 
+      '. New start time: ' + new Date(startTimeEpochTime).toISOString() + '.');
   }
 
   if (endTimeEpochTime != existingEndTimeEpochTime) {
     changesNeeded = true;
-    Logger.log(existingEvent.id + ' end time updated');
+    Logger.log('End time for ' + pelotonClass.title + ' updated. Previous end time: ' + existingEndTime + 
+      '. New end time: ' + new Date(endTimeEpochTime).toISOString() + '.');
   }
   
   if (changesNeeded) {
-    deleteEvent(existingEvent.id);
+    deleteEventById(existingEvent.id);
     createEvent(pelotonClass, encoreClassStartTime);
   }
 }

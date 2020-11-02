@@ -12,7 +12,6 @@ var url = `https://api.onepeloton.com/api/v3/ride/live?exclude_complete=true&con
 
 function updatePelotonLiveRideCalendar() {
   var existingEvents = getUpcomingPelotonCalendarEvents();
-  Logger.log('There are ' + existingEvents.size + ' existing Peloton events in the Google calendar.');
   var response = UrlFetchApp.fetch(url, {'muteHttpExceptions': true});
   var json = response.getContentText();
   data = JSON.parse(json);
@@ -20,7 +19,8 @@ function updatePelotonLiveRideCalendar() {
   instructorList = data.instructors;
   classList = data.rides;
   encoreClassData = data.data;
-  Logger.log('The Peloton API returned ' + classList.length + ' rides (list includes both live and encore rides).');
+  Logger.log('Script run ' + new Date() + ': ' + existingEvents.size + ' existing calendar events identified, ' +
+    classList.length + ' rides returned from Peloton API.');
   
   for (var i = 0; i < classList.length; i++) {
     var encoreClassStartTime = null;
@@ -35,7 +35,6 @@ function updatePelotonLiveRideCalendar() {
     if (hasMatchingCalendarEvent) {
       var existingEvent = existingEvents.get(pelotonClass.id);
       checkForEventUpdates(pelotonClass, existingEvent, encoreClassStartTime);
-      Logger.log('ClassId ' + pelotonClass.id + ' already has a calendar event.');
       existingEvents.delete(pelotonClass.id);
     } else {
       createEvent(pelotonClass, encoreClassStartTime);
@@ -48,7 +47,7 @@ function updatePelotonLiveRideCalendar() {
     
     for(var i = 0; i < existingEvents.size; i++) {
       var eventToRemove = eventsToRemove.next().value;
-      deleteEvent(eventToRemove.id);
+      deleteEventById(eventToRemove.id);
     }
   }  
 }

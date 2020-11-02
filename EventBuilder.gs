@@ -59,12 +59,15 @@ function getUpcomingPelotonCalendarEvents() {
   return existingEvents;
 }
 
-function deleteEvent(eventId) {
+function deleteEventById(eventId) {
   try {
-    CalendarApp.getCalendarById(calendarId).getEventById(eventId).deleteEvent();
-    Logger.log('Event ' + eventId + ' deleted.');
+    var event = CalendarApp.getCalendarById(calendarId).getEventById(eventId);
+    event.deleteEvent();
+    Logger.log(event.getSummary() + ' with ' + event.getLocation() + ' on ' + 
+      event.getStartTime() + ' deleted.');
   } catch(e) {
-    console.error("Error deleting event " + eventId + " from calendar " + calendarId + ". Error: " + e);
+    console.error("Error deleting event " + event.getSummary() + ' with ' + event.getLocation() + ' on ' + 
+      event.getStartTime() + ". Error: " + e);
   }
 }
 
@@ -73,7 +76,7 @@ function deleteAllEvents() {
   var existingEvents = getAllPelotonCalendarEventIds();
   for (var i = 0; i < existingEvents.length; i++) {
     var eventId = existingEvents[i];
-    deleteEvent(eventId);
+    deleteEventById(eventId);
   }
 }
 
