@@ -13,11 +13,14 @@ function logUpdatedEvent(event, eventUpdates) {
   Logger.log(logEntry);
 }
 
-function logScriptRun(existingCalendarEventCount, pelotonClassCount) {
-  var summary = 'Script run completed on ' + new Date();
+function logScriptRun(existingCalendarEventCount, pelotonClassCount, addedClassCount, removedClassCount, updatedClassCount) {
+  var summary = 'Script run completed ' + new Date();
   var details = {
-    existingCalendarEventCount: existingCalendarEventCount,
-    pelotonClassCount: pelotonClassCount
+    existingClassesInCalendar: existingCalendarEventCount,
+    classesFromPelotonApi: pelotonClassCount,
+    classesAdded: addedClassCount,
+    classesRemoved: removedClassCount,
+    classesUpdated: updatedClassCount
   };
   var logEntry = new LogEntry('Script run', summary, details);
   Logger.log(logEntry);

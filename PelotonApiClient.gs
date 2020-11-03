@@ -2,6 +2,10 @@ var data;
 var instructorList;
 var classList;
 var encoreClassData;
+var addedClassCount = 0;
+var removedClassCount = 0;
+var updatedClassCount = 0;
+
 // If you don't round the queryStartTime, the API only returns about half of the results
 var queryStartTime = Math.round(Date.now() / 1000);
 // Get end time 13 days in future - the API is finnicky about start/end times passed in and will
@@ -21,9 +25,7 @@ function updatePelotonLiveRideCalendar() {
   instructorList = data.instructors;
   classList = data.rides;
   encoreClassData = data.data;
-  
-  logScriptRun(existingEvents.size, classList.length);
-  
+    
   for (var i = 0; i < classList.length; i++) {
     var encoreClassStartTime = null;
     var pelotonClass = classList[i];
@@ -45,6 +47,7 @@ function updatePelotonLiveRideCalendar() {
       existingEvents.delete(pelotonClass.id);
     } else {
       var createdEvent = createEvent(pelotonClass, encoreClassStartTime);
+      addedClassCount++;
       logCreatedEvent(createdEvent);
     }
   }
@@ -55,7 +58,10 @@ function updatePelotonLiveRideCalendar() {
     for(var i = 0; i < existingEvents.size; i++) {
       var eventToRemove = eventsToRemove.next().value;
       deleteEventById(eventToRemove.id);
+      removedClassCount++;
       logDeletedEvent(eventToRemove);
     }
-  }  
+  } 
+  
+  logScriptRun(existingEvents.size, classList.length, addedClassCount, removedClassCount, updatedClassCount);
 }

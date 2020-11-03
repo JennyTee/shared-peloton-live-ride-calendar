@@ -93,6 +93,7 @@ function checkForEventUpdates(pelotonClass, existingEvent, encoreClassStartTime)
 
     deleteEventById(existingEvent.id);
     createEvent(pelotonClass, encoreClassStartTime);
+    updatedClassCount++;
     logUpdatedEvent(existingEvent, eventUpdates);
   }
 }
