@@ -11,7 +11,9 @@ function checkForEventUpdates(pelotonClass, existingEvent, encoreClassStartTime)
   var endTimeUpdated = false;
   var endTimeUpdate = null;
   
-  if (pelotonClass.title != existingEvent.summary) {
+  // Remove "[Encore]" and "[German]" from existing event titles before comparing ride names
+  var existingEventTitle = existingEvent.summary.replace(/ \[Encore]| \[German]/gi, '');
+  if (pelotonClass.title != existingEventTitle) {
     titleUpdated = true;
     titleUpdate = {
       previousTitle: existingEvent.summary,

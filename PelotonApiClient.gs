@@ -11,6 +11,8 @@ var url = `https://api.onepeloton.com/api/v3/ride/live?exclude_complete=true&con
   + `studio&exclude_live_in_studio_only=true&browse_category=cycling&start=${queryStartTime}&end=${queryEndTime}`;
 
 function updatePelotonLiveRideCalendar() {
+  // Need to track processed classes since Peloton API sometimes returns duplicate objects
+  var processedClasses = new Set();
   var existingEvents = getUpcomingPelotonCalendarEvents();
   var response = UrlFetchApp.fetch(url, {'muteHttpExceptions': true});
   var json = response.getContentText();
@@ -25,6 +27,11 @@ function updatePelotonLiveRideCalendar() {
   for (var i = 0; i < classList.length; i++) {
     var encoreClassStartTime = null;
     var pelotonClass = classList[i];
+    if (processedClasses.has(pelotonClass.id)) {
+      continue;
+    }
+    
+    processedClasses.add(pelotonClass.id);
     var hasMatchingCalendarEvent = existingEvents.has(pelotonClass.id);
     var isEncore = pelotonClass.original_air_time != null;
     

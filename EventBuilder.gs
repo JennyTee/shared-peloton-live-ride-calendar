@@ -36,7 +36,7 @@ function createEvent(ride, encoreClassStartTime) {
 
 function buildEventSummary(ride, encoreClassStartTime) {
   var foreignLanguageIndicator = '';
-  if (ride.origin_locale = 'de-DE') {
+  if (ride.origin_locale == 'de-DE') {
     foreignLanguageIndicator = ' [German]';
   }
   var encoreIndicator = !!encoreClassStartTime ? ' [Encore]' : '';
