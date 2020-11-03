@@ -7,8 +7,7 @@ When complete, this script will provide users with automatic updates to their Go
 ### Current functionality:
  - Queries Peloton API for live cycling class list once/day
  - Compares existing Google Calendar events to Peloton API response and adds/updates/deletes Google Calendar events as needed for both live and encore classes
- - Records basic logs via built-in Google Apps Script log
+ - Logs script runs and classes added/removed/updated via Google Cloud logging (a.k.a. Stackdriver logging)
     
 ### Upcoming functionality:  
  - Accept user-entered class filtering criteria (including class type) to limit kinds of classes considered when adding/removing/updating events from calendar
- - Enhance logging
