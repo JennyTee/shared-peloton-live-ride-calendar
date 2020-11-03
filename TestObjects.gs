@@ -103,7 +103,6 @@ function createTestEvent() {
   }
   };
   event = Calendar.Events.insert(event, calendarId);
-  logEventFormatted(event);
 }
 
 

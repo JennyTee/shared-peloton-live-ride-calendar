@@ -3,8 +3,11 @@ var calendarId = 'primary';
 function createEvent(ride, encoreClassStartTime) {
   var startTime = !!encoreClassStartTime ? encoreClassStartTime * 1000 : ride.scheduled_start_time * 1000;
   var endTime = startTime + (ride.duration * 1000);
+  
+  var summary = buildEventSummary(ride, encoreClassStartTime);
+  
   var event = {
-    summary: ride.title,
+    summary: summary,
     location: getInstructorName(ride.instructor_id),
     description: ride.description,
     start: {
@@ -28,8 +31,18 @@ function createEvent(ride, encoreClassStartTime) {
     }
   };
   event = Calendar.Events.insert(event, calendarId);
-  Logger.log(ride.title + ' event created.');
-  logEventFormatted(event);
+  return event;
+}
+
+function buildEventSummary(ride, encoreClassStartTime) {
+  var foreignLanguageIndicator = '';
+  if (ride.origin_locale = 'de-DE') {
+    foreignLanguageIndicator = ' [German]';
+  }
+  var encoreIndicator = !!encoreClassStartTime ? ' [Encore]' : '';
+  
+  var eventSummary = `${ride.title}${foreignLanguageIndicator}${encoreIndicator}`;
+  return eventSummary;
 }
 
 function getUpcomingPelotonCalendarEvents() {
@@ -54,7 +67,7 @@ function getUpcomingPelotonCalendarEvents() {
       }
     }
   } else {
-    Logger.log('No exisiting events found.');
+    //Logger.log('No exisiting events found.');
   }
   return existingEvents;
 }
@@ -63,8 +76,8 @@ function deleteEventById(eventId) {
   try {
     var event = CalendarApp.getCalendarById(calendarId).getEventById(eventId);
     event.deleteEvent();
-    Logger.log(event.getSummary() + ' with ' + event.getLocation() + ' on ' + 
-      event.getStartTime() + ' deleted.');
+    //Logger.log(event.getSummary() + ' with ' + event.getLocation() + ' on ' + 
+      //event.getStartTime() + ' deleted.');
   } catch(e) {
     console.error("Error deleting event " + event.getSummary() + ' with ' + event.getLocation() + ' on ' + 
       event.getStartTime() + ". Error: " + e);
@@ -102,9 +115,7 @@ function getAllPelotonCalendarEventIds() {
         eventIds.push(event.id);
       }
     }
-  } else {
-    Logger.log('No events found.');
   }
-  Logger.log('Existing event count: ' + eventIds.length);
+
   return eventIds;
 }

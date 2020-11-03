@@ -19,8 +19,8 @@ function updatePelotonLiveRideCalendar() {
   instructorList = data.instructors;
   classList = data.rides;
   encoreClassData = data.data;
-  Logger.log('Script run ' + new Date() + ': ' + existingEvents.size + ' existing calendar events identified, ' +
-    classList.length + ' rides returned from Peloton API.');
+  
+  logScriptRun(existingEvents.size, classList.length);
   
   for (var i = 0; i < classList.length; i++) {
     var encoreClassStartTime = null;
@@ -37,17 +37,18 @@ function updatePelotonLiveRideCalendar() {
       checkForEventUpdates(pelotonClass, existingEvent, encoreClassStartTime);
       existingEvents.delete(pelotonClass.id);
     } else {
-      createEvent(pelotonClass, encoreClassStartTime);
+      var createdEvent = createEvent(pelotonClass, encoreClassStartTime);
+      logCreatedEvent(createdEvent);
     }
   }
   
   if (existingEvents.size > 0) {
-    Logger.log('One or more calendar events will be removed due to class cancellations.');
     var eventsToRemove = existingEvents.values();
     
     for(var i = 0; i < existingEvents.size; i++) {
       var eventToRemove = eventsToRemove.next().value;
       deleteEventById(eventToRemove.id);
+      logDeletedEvent(eventToRemove);
     }
   }  
 }
