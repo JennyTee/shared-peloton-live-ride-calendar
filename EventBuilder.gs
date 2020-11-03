@@ -16,9 +16,8 @@ function createEvent(ride, encoreClassStartTime) {
     end: {
       dateTime: new Date(endTime).toISOString()
     },
-    // TODO: update color based on class type (once querying supports all class types)
     colorId: !!encoreClassStartTime ? 3 : 2,
-    // TODO: find a use for the non-classId extended properties or consider removing them, as they are not currently used
+    // Extended properties are not currently displayed in created calendar events. They are just metadata tags.
     extendedProperties: {
       shared: {
         classLength: ride.duration / 60,
@@ -36,6 +35,7 @@ function createEvent(ride, encoreClassStartTime) {
 
 function buildEventSummary(ride, encoreClassStartTime) {
   var foreignLanguageIndicator = '';
+  // If rides are offered in other languages someday, this will need to be updated.
   if (ride.origin_locale == 'de-DE') {
     foreignLanguageIndicator = ' [German]';
   }
@@ -66,8 +66,6 @@ function getUpcomingPelotonCalendarEvents() {
         existingEvents.set(sharedExtendedProperties.classId, event);
       }
     }
-  } else {
-    //Logger.log('No exisiting events found.');
   }
   return existingEvents;
 }
@@ -76,8 +74,6 @@ function deleteEventById(eventId) {
   try {
     var event = CalendarApp.getCalendarById(calendarId).getEventById(eventId);
     event.deleteEvent();
-    //Logger.log(event.getSummary() + ' with ' + event.getLocation() + ' on ' + 
-      //event.getStartTime() + ' deleted.');
   } catch(e) {
     console.error("Error deleting event " + event.getSummary() + ' with ' + event.getLocation() + ' on ' + 
       event.getStartTime() + ". Error: " + e);
