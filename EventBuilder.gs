@@ -24,8 +24,7 @@ function createEvent(ride, encoreClassStartTime) {
         classId: ride.id,
         classType: ride.fitness_discipline_display_name,
         hasClosedCaptions: ride.has_closed_captions,
-        instructor: getInstructorName(ride.instructor_id),
-        language: ride.language
+        instructor: getInstructorName(ride.instructor_id)
       }
     }
   };
