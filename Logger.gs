@@ -25,11 +25,15 @@ function logScriptRun(existingCalendarEventCount, pelotonClassCount, addedClassC
   var logEntry = new LogEntry('Script run', summary, details);
   Logger.log(logEntry);
 }
+
+function logError(exception, event) {
+  var logEntry = new LogEntry('Script error', exception, event);
+}
     
 class LogEntry {
   constructor(logType, summary, eventDetails) {
-  this.summary = summary;
-  this.logType = logType;
-  this.eventDetails = eventDetails
+    this.logType = logType;
+    this.summary = summary;
+    this.eventDetails = eventDetails
   }
 }

@@ -74,13 +74,30 @@ function deleteEventById(eventId) {
     var event = CalendarApp.getCalendarById(calendarId).getEventById(eventId);
     event.deleteEvent();
   } catch(e) {
-    console.error("Error deleting event " + event.getSummary() + ' with ' + event.getLocation() + ' on ' + 
-      event.getStartTime() + ". Error: " + e);
+    logError(e, event);
+  }
+}
+
+// Deletes all exisitng events in Google calendar. 
+// Only use if you really want to delete all existing events!
+// You may have to run this more than once--it seems to time out 
+// if there are many items in the calendar.
+function deleteAllEvents() {
+  var startDate = new Date();
+  var events = Calendar.Events.list(calendarId, {
+    timeMin: startDate.toISOString(),
+    singleEvents: true,
+    orderBy: 'startTime',
+    maxResults: 1000
+  });
+  
+  if (events.items && events.items.length > 0) {
+    events.items.forEach(i => deleteEventById(i.id));
   }
 }
 
 // used for testing
-function deleteAllEvents() {
+function deleteAllEventsAddedByScript() {
   var existingEvents = getAllPelotonCalendarEventIds();
   for (var i = 0; i < existingEvents.length; i++) {
     var eventId = existingEvents[i];
