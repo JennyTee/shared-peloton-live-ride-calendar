@@ -16,11 +16,11 @@ function logUpdatedEvent(event, eventUpdates) {
 function logScriptRun(existingCalendarEventCount, pelotonClassCount, addedClassCount, removedClassCount, updatedClassCount) {
   var summary = 'Script run completed ' + new Date();
   var details = {
-    existingClassesInCalendar: existingCalendarEventCount,
-    classesFromPelotonApi: pelotonClassCount,
-    classesAdded: addedClassCount,
-    classesRemoved: removedClassCount,
-    classesUpdated: updatedClassCount
+    existingClassesInCalendar: existingCalendarEventCount.toFixed(),
+    classesFromPelotonApi: pelotonClassCount.toFixed(),
+    classesAdded: addedClassCount.toFixed(),
+    classesRemoved: removedClassCount.toFixed(),
+    classesUpdated: updatedClassCount.toFixed()
   };
   var logEntry = new LogEntry('Script run', summary, details);
   Logger.log(logEntry);
@@ -28,6 +28,7 @@ function logScriptRun(existingCalendarEventCount, pelotonClassCount, addedClassC
 
 function logError(exception, event) {
   var logEntry = new LogEntry('Script error', exception, event);
+  Logger.log(logEntry);
 }
     
 class LogEntry {
