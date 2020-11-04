@@ -98,11 +98,8 @@ function createTestEvent() {
         classType: mockClass.fitness_discipline_display_name,
         hasClosedCaptions: mockClass.has_closed_captions,
         instructor: getInstructorName(mockClass.instructor_id),
-        language: mockClass.language
       }
   }
   };
   event = Calendar.Events.insert(event, calendarId);
 }
-
-

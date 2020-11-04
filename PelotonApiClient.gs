@@ -18,6 +18,7 @@ function updatePelotonLiveRideCalendar() {
   // Need to track processed classes since Peloton API sometimes returns duplicate objects
   var processedClasses = new Set();
   var existingEvents = getUpcomingPelotonCalendarEvents();
+  var existingEventCount = existingEvents.size;
   var response = UrlFetchApp.fetch(url, {'muteHttpExceptions': true});
   var json = response.getContentText();
   data = JSON.parse(json);
@@ -63,5 +64,5 @@ function updatePelotonLiveRideCalendar() {
     }
   } 
   
-  logScriptRun(existingEvents.size, classList.length, addedClassCount, removedClassCount, updatedClassCount);
+  logScriptRun(existingEventCount, classList.length, addedClassCount, removedClassCount, updatedClassCount);
 }
