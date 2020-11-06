@@ -1,10 +1,10 @@
 var calendarId = 'primary';
 
-function createEvent(ride, encoreClassStartTime) {
-  var startTime = !!encoreClassStartTime ? encoreClassStartTime * 1000 : ride.scheduled_start_time * 1000;
+function createEvent(ride, actualStartTime, isEncore) {
+  var startTime = actualStartTime * 1000;
   var endTime = startTime + (ride.duration * 1000);
   
-  var summary = buildEventSummary(ride, encoreClassStartTime);
+  var summary = buildEventSummary(ride, actualStartTime, isEncore);
   
   var event = {
     summary: summary,
@@ -16,7 +16,7 @@ function createEvent(ride, encoreClassStartTime) {
     end: {
       dateTime: new Date(endTime).toISOString()
     },
-    colorId: !!encoreClassStartTime ? 3 : 2,
+    colorId: isEncore ? 3 : 2,
     // Extended properties are not currently displayed in created calendar events. They are just metadata tags.
     extendedProperties: {
       shared: {
@@ -32,14 +32,13 @@ function createEvent(ride, encoreClassStartTime) {
   return event;
 }
 
-function buildEventSummary(ride, encoreClassStartTime) {
+function buildEventSummary(ride, actualStartTime, isEncore) {
   var foreignLanguageIndicator = '';
   // If rides are offered in other languages someday, this will need to be updated.
   if (ride.origin_locale == 'de-DE') {
     foreignLanguageIndicator = ' [German]';
   }
-  var encoreIndicator = !!encoreClassStartTime ? ' [Encore]' : '';
-  
+  var encoreIndicator = !!isEncore ? ' [Encore]' : '';
   var eventSummary = `${ride.title}${foreignLanguageIndicator}${encoreIndicator}`;
   return eventSummary;
 }
@@ -78,7 +77,7 @@ function deleteEventById(eventId) {
   }
 }
 
-// Deletes all exisitng events in Google calendar. 
+// Deletes all existing events in Google calendar. 
 // Only use if you really want to delete all existing events!
 // You may have to run this more than once--it seems to time out 
 // if there are many items in the calendar.

@@ -2,6 +2,7 @@ var data;
 var instructorList;
 var classList;
 var encoreClassData;
+var encoreHashMap;
 var addedClassCount = 0;
 var removedClassCount = 0;
 var updatedClassCount = 0;
@@ -26,28 +27,26 @@ function updatePelotonLiveRideCalendar() {
   instructorList = data.instructors;
   classList = data.rides;
   encoreClassData = data.data;
+  encoreHashMap = new Map(encoreClassData.map(i => [i.ride_id, i]));
     
   for (var i = 0; i < classList.length; i++) {
-    var encoreClassStartTime = null;
     var pelotonClass = classList[i];
+    var classData = encoreHashMap.get(pelotonClass.id);
     if (processedClasses.has(pelotonClass.id)) {
       continue;
     }
     
     processedClasses.add(pelotonClass.id);
     var hasMatchingCalendarEvent = existingEvents.has(pelotonClass.id);
-    var isEncore = pelotonClass.original_air_time != null;
-    
-    if (isEncore) {
-      encoreClassStartTime = getMatchingEncoreClassStartTime(pelotonClass.id);
-    }
+    // The actual class start time is located inside of the Data object
+    var actualStartTime = classData.scheduled_start_time;
 
     if (hasMatchingCalendarEvent) {
       var existingEvent = existingEvents.get(pelotonClass.id);
-      checkForEventUpdates(pelotonClass, existingEvent, encoreClassStartTime);
+      checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, classData.is_encore);
       existingEvents.delete(pelotonClass.id);
     } else {
-      var createdEvent = createEvent(pelotonClass, encoreClassStartTime);
+      var createdEvent = createEvent(pelotonClass, actualStartTime, classData.is_encore);
       addedClassCount++;
       logCreatedEvent(createdEvent);
     }
@@ -65,4 +64,14 @@ function updatePelotonLiveRideCalendar() {
   } 
   
   logScriptRun(existingEventCount, classList.length, addedClassCount, removedClassCount, updatedClassCount);
+}
+
+//todo: refactor this for performance
+function getInstructorName(instructorId) {
+  for (var i = 0; i < instructorList.length; i++) {
+    if (instructorList[i].id == instructorId) {
+      return `${instructorList[i].first_name} ${instructorList[i].last_name}`;
+    }
+  }
+  return '';
 }
