@@ -1,5 +1,6 @@
 var data;
 var instructorList;
+var instructorHashMap;
 var classList;
 var encoreClassData;
 var encoreHashMap;
@@ -25,6 +26,7 @@ function updatePelotonLiveRideCalendar() {
   data = JSON.parse(json);
   
   instructorList = data.instructors;
+  instructorHashMap = new Map(instructorList.map(i => [i.id, i]));
   classList = data.rides;
   encoreClassData = data.data;
   encoreHashMap = new Map(encoreClassData.map(i => [i.ride_id, i]));
@@ -66,12 +68,10 @@ function updatePelotonLiveRideCalendar() {
   logScriptRun(existingEventCount, classList.length, addedClassCount, removedClassCount, updatedClassCount);
 }
 
-//todo: refactor this for performance
 function getInstructorName(instructorId) {
-  for (var i = 0; i < instructorList.length; i++) {
-    if (instructorList[i].id == instructorId) {
-      return `${instructorList[i].first_name} ${instructorList[i].last_name}`;
-    }
+  var instructor = instructorHashMap.get(instructorId);
+  if (!!instructor) {
+    return `${instructor.first_name} ${instructor.last_name}`;
   }
   return '';
 }
