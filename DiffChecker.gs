@@ -1,4 +1,4 @@
-function checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, isEncore) {
+function checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, isEncore, metadataId) {
   // Extended properties are not currently checked for differences, as they are hidden to the end user.
   var titleUpdated = false;
   var titleUpdate = null;
@@ -92,7 +92,7 @@ function checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, isEn
     }
 
     deleteEventById(existingEvent.id);
-    createEvent(pelotonClass, actualStartTime, isEncore);
+    createEvent(pelotonClass, actualStartTime, isEncore, metadataId);
     updatedClassCount++;
     logUpdatedEvent(existingEvent, eventUpdates);
   }

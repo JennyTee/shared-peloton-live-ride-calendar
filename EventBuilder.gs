@@ -1,6 +1,6 @@
 var calendarId = 'primary';
 
-function createEvent(ride, actualStartTime, isEncore) {
+function createEvent(ride, actualStartTime, isEncore, rideMetadataId) {
   var startTime = actualStartTime * 1000;
   var endTime = startTime + (ride.duration * 1000);
   
@@ -24,7 +24,8 @@ function createEvent(ride, actualStartTime, isEncore) {
         classId: ride.id,
         classType: ride.fitness_discipline_display_name,
         hasClosedCaptions: ride.has_closed_captions,
-        instructor: getInstructorName(ride.instructor_id)
+        instructor: getInstructorName(ride.instructor_id),
+        metadataId: rideMetadataId
       }
     }
   };
@@ -60,8 +61,8 @@ function getUpcomingPelotonCalendarEvents() {
         continue;
       }
       var sharedExtendedProperties = extendedProperties.getShared();
-      if (!!sharedExtendedProperties && sharedExtendedProperties.classId != null) {
-        existingEvents.set(sharedExtendedProperties.classId, event);
+      if (!!sharedExtendedProperties && sharedExtendedProperties.metadataId != null) {
+        existingEvents.set(sharedExtendedProperties.metadataId, event);
       }
     }
   }
