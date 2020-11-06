@@ -82,7 +82,7 @@ function deleteEventById(eventId) {
 // Only use if you really want to delete all existing events!
 // You may have to run this more than once--it seems to time out 
 // if there are many items in the calendar.
-function deleteAllEvents() {
+function deleteAllFutureEvents() {
   var startDate = new Date();
   var events = Calendar.Events.list(calendarId, {
     timeMin: startDate.toISOString(),
