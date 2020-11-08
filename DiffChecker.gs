@@ -26,11 +26,11 @@ function checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, isEn
   }
   
   var instructorName = getInstructorName(pelotonClass.instructor_id);
-  if (instructorName != existingEvent.location) {
+  if (instructorName !== existingEvent.location) {
     instructorUpdated = true;
     instructorUpdate = {
-      previousInstructor: existingEvent.summary,
-      newInstructor: pelotonClass.title
+      previousInstructor: existingEvent.location,
+      newInstructor: instructorName
     };
   } else {
     instructorUpdate = {
