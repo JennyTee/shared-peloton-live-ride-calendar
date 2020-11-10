@@ -1,12 +1,12 @@
 var calendarId = 'primary';
 
 function createEvent(ride, actualStartTime, isEncore, rideMetadataId) {
-  var startTime = actualStartTime * 1000;
-  var endTime = startTime + (ride.duration * 1000);
+  let startTime = actualStartTime * 1000;
+  let endTime = startTime + (ride.duration * 1000);
   
-  var summary = buildEventSummary(ride, actualStartTime, isEncore);
+  let summary = buildEventSummary(ride, actualStartTime, isEncore);
   
-  var event = {
+  let event = {
     summary: summary,
     location: getInstructorName(ride.instructor_id),
     description: ride.description,
@@ -34,33 +34,33 @@ function createEvent(ride, actualStartTime, isEncore, rideMetadataId) {
 }
 
 function buildEventSummary(ride, actualStartTime, isEncore) {
-  var foreignLanguageIndicator = '';
+  let foreignLanguageIndicator = '';
   // If rides are offered in other languages someday, this will need to be updated.
   if (ride.origin_locale == 'de-DE') {
     foreignLanguageIndicator = ' [German]';
   }
-  var encoreIndicator = !!isEncore ? ' [Encore]' : '';
-  var eventSummary = `${ride.title}${foreignLanguageIndicator}${encoreIndicator}`;
+  let encoreIndicator = !!isEncore ? ' [Encore]' : '';
+  let eventSummary = `${ride.title}${foreignLanguageIndicator}${encoreIndicator}`;
   return eventSummary;
 }
 
 function getUpcomingPelotonCalendarEvents() {
-  var existingEvents = new Map();
-  var now = new Date();
-  var events = Calendar.Events.list(calendarId, {
+  let existingEvents = new Map();
+  let now = new Date();
+  let events = Calendar.Events.list(calendarId, {
     timeMin: now.toISOString(),
     singleEvents: true,
     orderBy: 'startTime',
     maxResults: 500
   });
   if (events.items && events.items.length > 0) {
-    for (var i = 0; i < events.items.length; i++) {
-      var event = events.items[i];
-      var extendedProperties = event.getExtendedProperties()
+    for (let i = 0; i < events.items.length; i++) {
+      let event = events.items[i];
+      let extendedProperties = event.getExtendedProperties()
       if (!extendedProperties) { 
         continue;
       }
-      var sharedExtendedProperties = extendedProperties.getShared();
+      let sharedExtendedProperties = extendedProperties.getShared();
       if (!!sharedExtendedProperties && sharedExtendedProperties.metadataId != null) {
         existingEvents.set(sharedExtendedProperties.metadataId, event);
       }
@@ -71,7 +71,7 @@ function getUpcomingPelotonCalendarEvents() {
 
 function deleteEventById(eventId) {
   try {
-    var event = CalendarApp.getCalendarById(calendarId).getEventById(eventId);
+    let event = CalendarApp.getCalendarById(calendarId).getEventById(eventId);
     event.deleteEvent();
   } catch(e) {
     logError(e, event);
@@ -83,8 +83,8 @@ function deleteEventById(eventId) {
 // You may have to run this more than once--it seems to time out 
 // if there are many items in the calendar.
 function deleteAllFutureEvents() {
-  var startDate = new Date();
-  var events = Calendar.Events.list(calendarId, {
+  let startDate = new Date();
+  let events = Calendar.Events.list(calendarId, {
     timeMin: startDate.toISOString(),
     singleEvents: true,
     orderBy: 'startTime',
@@ -98,31 +98,31 @@ function deleteAllFutureEvents() {
 
 // used for testing
 function deleteAllEventsAddedByScript() {
-  var existingEvents = getAllPelotonCalendarEventIds();
-  for (var i = 0; i < existingEvents.length; i++) {
-    var eventId = existingEvents[i];
+  let existingEvents = getAllPelotonCalendarEventIds();
+  for (let i = 0; i < existingEvents.length; i++) {
+    let eventId = existingEvents[i];
     deleteEventById(eventId);
   }
 }
 
 // used for testing
 function getAllPelotonCalendarEventIds() {
-  var eventIds = [];
-  var startDate = new Date(2018, 11, 24, 10, 33, 30, 0);
-  var events = Calendar.Events.list(calendarId, {
+  let eventIds = [];
+  let startDate = new Date(2018, 11, 24, 10, 33, 30, 0);
+  let events = Calendar.Events.list(calendarId, {
     timeMin: startDate.toISOString(),
     singleEvents: true,
     orderBy: 'startTime',
     maxResults: 500
   });
   if (events.items && events.items.length > 0) {
-    for (var i = 0; i < events.items.length; i++) {
-      var event = events.items[i];
-      var extendedProperties = event.getExtendedProperties()
+    for (let i = 0; i < events.items.length; i++) {
+      let event = events.items[i];
+      let extendedProperties = event.getExtendedProperties()
       if (!extendedProperties) { 
         continue;
       }
-      var sharedExtendedProperties = extendedProperties.getShared();
+      let sharedExtendedProperties = extendedProperties.getShared();
       if (!!sharedExtendedProperties && sharedExtendedProperties.classId != null) {
         eventIds.push(event.id);
       }

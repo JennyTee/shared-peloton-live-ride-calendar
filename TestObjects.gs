@@ -77,10 +77,10 @@ var mockClass = {
 function createTestEvent() {
   getPelotonClasses();
   
-  var calendarId = 'primary';
-  var startTime = mockClass.scheduled_start_time * 1000;
-  var endTime = startTime + (mockClass.duration * 1000);
-  var event = {
+  let calendarId = 'primary';
+  let startTime = mockClass.scheduled_start_time * 1000;
+  let endTime = startTime + (mockClass.duration * 1000);
+  let event = {
     summary: mockClass.title,
     location: getInstructorName(mockClass.instructor_id),
     description: mockClass.description,

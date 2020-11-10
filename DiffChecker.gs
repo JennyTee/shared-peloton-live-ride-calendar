@@ -1,18 +1,18 @@
 function checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, isEncore, metadataId) {
   // Extended properties are not currently checked for differences, as they are hidden to the end user.
-  var titleUpdated = false;
-  var titleUpdate = null;
-  var instructorUpdated = false;
-  var instructorUpdate = null;
-  var descriptionUpdated = false;
-  var descriptionUpdate = null;
-  var startTimeUpdated = false;
-  var startTimeUpdate = null;
-  var endTimeUpdated = false;
-  var endTimeUpdate = null;
+  let titleUpdated = false;
+  let titleUpdate = null;
+  let instructorUpdated = false;
+  let instructorUpdate = null;
+  let descriptionUpdated = false;
+  let descriptionUpdate = null;
+  let startTimeUpdated = false;
+  let startTimeUpdate = null;
+  let endTimeUpdated = false;
+  let endTimeUpdate = null;
   
   // Remove "[Encore]" and "[German]" from existing event titles before comparing ride names
-  var existingEventTitle = existingEvent.summary.replace(/ \[Encore]| \[German]/gi, '');
+  let existingEventTitle = existingEvent.summary.replace(/ \[Encore]| \[German]/gi, '');
   if (pelotonClass.title != existingEventTitle) {
     titleUpdated = true;
     titleUpdate = {
@@ -25,7 +25,7 @@ function checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, isEn
     }
   }
   
-  var instructorName = getInstructorName(pelotonClass.instructor_id);
+  let instructorName = getInstructorName(pelotonClass.instructor_id);
   if (instructorName !== existingEvent.location) {
     instructorUpdated = true;
     instructorUpdate = {
@@ -50,13 +50,13 @@ function checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, isEn
     }
   }
   
-  var startTimeEpochTime = actualStartTime * 1000;
-  var endTimeEpochTime = startTimeEpochTime + (pelotonClass.duration * 1000);
+  let startTimeEpochTime = actualStartTime * 1000;
+  let endTimeEpochTime = startTimeEpochTime + (pelotonClass.duration * 1000);
   
-  var existingStartTime = existingEvent.getStart().getDateTime();
-  var existingStartTimeEpochTime = Date.parse(existingStartTime);
-  var existingEndTime = existingEvent.getEnd().getDateTime();
-  var existingEndTimeEpochTime = Date.parse(existingEndTime);
+  let existingStartTime = existingEvent.getStart().getDateTime();
+  let existingStartTimeEpochTime = Date.parse(existingStartTime);
+  let existingEndTime = existingEvent.getEnd().getDateTime();
+  let existingEndTimeEpochTime = Date.parse(existingEndTime);
 
   if (startTimeEpochTime != existingStartTimeEpochTime) {
     startTimeUpdated = true;
@@ -83,7 +83,7 @@ function checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, isEn
   }
   
   if (titleUpdated || instructorUpdated || descriptionUpdated || startTimeUpdated || endTimeUpdated) {
-    var eventUpdates = {
+    let eventUpdates = {
       titleUpdate: titleUpdate,
       instructorUpdate: instructorUpdate,
       descriptionUpdate: descriptionUpdate,

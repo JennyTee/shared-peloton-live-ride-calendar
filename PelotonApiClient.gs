@@ -1,5 +1,5 @@
 // Peloton Live Ride Calendar Script
-// Version 1.0.0
+// Version 1.1.0
 
 var data;
 var instructorList;
@@ -20,10 +20,10 @@ var url = `https://api.onepeloton.com/api/v3/ride/live?exclude_complete=true&con
 
 function updatePelotonLiveRideCalendar() {
   // Need to track processed classes since Peloton API sometimes returns duplicate objects
-  var existingEvents = getUpcomingPelotonCalendarEvents();
-  var existingEventCount = existingEvents.size;
-  var response = UrlFetchApp.fetch(url, {'muteHttpExceptions': true});
-  var json = response.getContentText();
+  let existingEvents = getUpcomingPelotonCalendarEvents();
+  let existingEventCount = existingEvents.size;
+  let response = UrlFetchApp.fetch(url, {'muteHttpExceptions': true});
+  let json = response.getContentText();
   data = JSON.parse(json);
   
   instructorList = data.instructors;
@@ -32,36 +32,36 @@ function updatePelotonLiveRideCalendar() {
   classList = data.rides;
   
   classMetadata = data.data;
-  var pelotonClassCount = classMetadata.length;
+  let pelotonClassCount = classMetadata.length;
     
-  for (var i = 0; i < classMetadata.length; i++) {
-    var pelotonClassMetadata = classMetadata[i];
-    var rideId = pelotonClassMetadata.ride_id;
-    var metadataId = pelotonClassMetadata.id;
+  for (let i = 0; i < classMetadata.length; i++) {
+    let pelotonClassMetadata = classMetadata[i];
+    let rideId = pelotonClassMetadata.ride_id;
+    let metadataId = pelotonClassMetadata.id;
     
-    var classInfoIndex = classList.findIndex(c => c.id === rideId);
-    var classInfo = classList.splice(classInfoIndex, 1)[0];
+    let classInfoIndex = classList.findIndex(c => c.id === rideId);
+    let classInfo = classList.splice(classInfoIndex, 1)[0];
     
     // The actual class start time is located inside of the Data object
-    var actualStartTime = pelotonClassMetadata.scheduled_start_time;
+    let actualStartTime = pelotonClassMetadata.scheduled_start_time;
 
-    var hasMatchingCalendarEvent = existingEvents.has(metadataId);
+    let hasMatchingCalendarEvent = existingEvents.has(metadataId);
     if (hasMatchingCalendarEvent) {
-      var existingEvent = existingEvents.get(metadataId);
+      let existingEvent = existingEvents.get(metadataId);
       checkForEventUpdates(classInfo, existingEvent, actualStartTime, pelotonClassMetadata.is_encore, metadataId);
       existingEvents.delete(metadataId);
     } else {
-      var createdEvent = createEvent(classInfo, actualStartTime, pelotonClassMetadata.is_encore, metadataId);
+      let createdEvent = createEvent(classInfo, actualStartTime, pelotonClassMetadata.is_encore, metadataId);
       addedClassCount++;
       logCreatedEvent(createdEvent);
     }    
   }
   
   if (existingEvents.size > 0) {
-    var eventsToRemove = existingEvents.values();
+    let eventsToRemove = existingEvents.values();
     
-    for(var i = 0; i < existingEvents.size; i++) {
-      var eventToRemove = eventsToRemove.next().value;
+    for(let i = 0; i < existingEvents.size; i++) {
+      let eventToRemove = eventsToRemove.next().value;
       deleteEventById(eventToRemove.id);
       removedClassCount++;
       logDeletedEvent(eventToRemove);
@@ -72,7 +72,7 @@ function updatePelotonLiveRideCalendar() {
 }
 
 function getInstructorName(instructorId) {
-  var instructor = instructorHashMap.get(instructorId);
+  let instructor = instructorHashMap.get(instructorId);
   if (!!instructor) {
     if (!!instructor.last_name) {
       return `${instructor.first_name} ${instructor.last_name}`;
