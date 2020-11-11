@@ -26,8 +26,8 @@ function logScriptRun(existingCalendarEventCount, pelotonClassCount, addedClassC
   Logger.log(logEntry);
 }
 
-function logError(exception, event) {
-  let logEntry = new LogEntry('Script error', exception, event);
+function logError(exception) {
+  let logEntry = new LogEntry('Script error', exception, 'No event details available.');
   Logger.log(logEntry);
 }
     

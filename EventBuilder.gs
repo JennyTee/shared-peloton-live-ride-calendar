@@ -74,7 +74,7 @@ function deleteEventById(eventId) {
     let event = CalendarApp.getCalendarById(calendarId).getEventById(eventId);
     event.deleteEvent();
   } catch(e) {
-    logError(e, event);
+    logError(e);
   }
 }
 
