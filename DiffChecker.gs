@@ -16,7 +16,7 @@ function checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, isEn
   if (pelotonClass.title != existingEventTitle) {
     titleUpdated = true;
     titleUpdate = {
-      previousTitle: existingEvent.summary,
+      previousTitle: existingEventTitle,
       newTitle: pelotonClass.title
     };
   } else {
@@ -38,10 +38,12 @@ function checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, isEn
     }
   }
   
-  if (pelotonClass.description != existingEvent.description) {
+  // Remove custom string added to ride description
+  let existingEventDescription = existingEvent.description.replace(/\n\nCompliments of the largest global Peloton community at https:\/\/www\.reddit\.com\/r\/pelotoncycle/gi, '');
+  if (pelotonClass.description != existingEventDescription) {
     descriptionUpdated = true;
     descriptionUpdate = {
-      previousDescription: existingEvent.description,
+      previousDescription: existingEventDescription,
       newDescription: pelotonClass.description
     }
   } else {

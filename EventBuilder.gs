@@ -9,7 +9,7 @@ function createEvent(ride, actualStartTime, isEncore, rideMetadataId) {
   let event = {
     summary: summary,
     location: getInstructorName(ride.instructor_id),
-    description: ride.description,
+    description: ride.description + '\n\nCompliments of the largest global Peloton community at https://www.reddit.com/r/pelotoncycle',
     start: {
       dateTime: new Date(startTime).toISOString()
     },
