@@ -5,10 +5,10 @@ function createEvent(ride, actualStartTime, isEncore, rideMetadataId) {
   let endTime = startTime + (ride.duration * 1000);
   
   let summary = buildEventSummary(ride, actualStartTime, isEncore);
-  
+  let instructorName = getInstructorName(ride.instructor_id);
   let event = {
     summary: summary,
-    location: getInstructorName(ride.instructor_id),
+    location: instructorName,
     description: ride.description + '\n\nCompliments of the largest global Peloton community at https://www.reddit.com/r/pelotoncycle',
     start: {
       dateTime: new Date(startTime).toISOString()
@@ -29,7 +29,15 @@ function createEvent(ride, actualStartTime, isEncore, rideMetadataId) {
       }
     }
   };
+  // Create event in main shared calendar
   event = Calendar.Events.insert(event, calendarId);
+  
+  // Create event in instructor calendar
+  let instructorCalendarId = instructorCalendars.get(instructorName);
+  if (!!instructorCalendarId) {
+    Calendar.Events.insert(event, instructorCalendarId);
+  }
+  
   return event;
 }
 
@@ -72,16 +80,31 @@ function getUpcomingPelotonCalendarEvents() {
 function deleteEventById(eventId) {
   try {
     let event = CalendarApp.getCalendarById(calendarId).getEventById(eventId);
+    let startTime = new Date(event.getStartTime());
+    let endTime = new Date(startTime.getTime() + 1000);
+    let instructorName = event.getLocation();
+    
+    // Delete shared calendar event
     event.deleteEvent();
+    
+    let instructorCalendarId = instructorCalendars.get(instructorName);
+    if (!!instructorCalendarId) {
+      let matchingInstructorCalendarEvents = CalendarApp.getCalendarById(instructorCalendarId)
+                              .getEvents(startTime, endTime, {});
+      
+      // Delete matching instructor calendar event
+      if (!!matchingInstructorCalendarEvents) {
+        matchingInstructorCalendarEvents[0].deleteEvent();
+      } 
+    }
   } catch(e) {
     logError(e);
   }
 }
 
-// Deletes all existing events in Google calendar. 
+// Deletes all existing events in the main shared Google calendar AND instructor-specific calendars.
 // Only use if you really want to delete all existing events!
-// You may have to run this more than once--it seems to time out 
-// if there are many items in the calendar.
+// You may have to run this more than once--it seems to time out if there are many items in the calendar.
 function deleteAllFutureEvents() {
   let startDate = new Date();
   let events = Calendar.Events.list(calendarId, {
@@ -94,6 +117,21 @@ function deleteAllFutureEvents() {
   if (events.items && events.items.length > 0) {
     events.items.forEach(i => deleteEventById(i.id));
   }
+}
+
+// Deletes all existing events in the instructor-specific Google calendars.
+// Does NOT touch the main shared calendar. Only use if you really want to delete all existing events!
+// You may have to run this more than once--it seems to time out if there are many items in the calendar.
+function deleteAllFutureInstructorCalendarEvents() {
+  instructorCalendars.forEach(function(value, key) {
+      let startDate = new Date();
+      // endDate is set for 30 days from now (this method will delete all events in the next 30 days)
+      let endDate = new Date(startDate.getTime() + (30 * 24 * 60 * 60 * 1000));
+      let matchingInstructorCalendarEvents = CalendarApp.getCalendarById(value).getEvents(startDate, endDate, {});                     
+      if (!!matchingInstructorCalendarEvents) {
+        matchingInstructorCalendarEvents.forEach(e => e.deleteEvent());
+      }
+   });
 }
 
 // used for testing
@@ -131,3 +169,4 @@ function getAllPelotonCalendarEventIds() {
 
   return eventIds;
 }
+
