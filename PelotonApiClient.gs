@@ -17,9 +17,16 @@ var queryStartTime = Math.round(Date.now() / 1000);
 // it gets unexpected start/end dates.
 var queryEndTime = queryStartTime + 1213199;
 
-// Update the variable below to change the script to find categories for any class. (and if you want the script to run for all
-// class categories, remove &browse_category=${classCategory} from the url below.
-// Class category options: cycling, strength, yoga, meditation, cardio, stretching, outdoor, running, walking, bootcamp
+/* 
+Update the classCategory variable below to change the script to find categories for any class. (And if you want the script 
+to run for all class categories, remove &browse_category=${classCategory} from the url below.)
+
+Class category options: 
+  cycling, strength, yoga, meditation, cardio, stretching, outdoor, running, walking, bootcamp, bike_bootcamp
+
+(The "bootcamp" category is tread bootcamp only. "Cycling" does not include bike bootcamp.)
+*/
+
 var classCategory = 'cycling';
 
 var url = `https://api.onepeloton.com/api/v3/ride/live?exclude_complete=true&content_provider=`
