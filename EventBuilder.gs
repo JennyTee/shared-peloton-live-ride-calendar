@@ -33,7 +33,7 @@ function createEvent(ride, actualStartTime, isEncore, rideMetadataId) {
   event = Calendar.Events.insert(event, calendarId);
   
   // Create event in instructor calendar
-  let instructorCalendarId = testInstructorCalendars.get(instructorName);
+  let instructorCalendarId = instructorCalendars.get(instructorName);
   if (!!instructorCalendarId) {
     Calendar.Events.insert(event, instructorCalendarId);
   }
@@ -87,7 +87,7 @@ function deleteEventById(eventId) {
     // Delete shared calendar event
     event.deleteEvent();
     
-    let instructorCalendarId = testInstructorCalendars.get(instructorName);
+    let instructorCalendarId = instructorCalendars.get(instructorName);
     if (!!instructorCalendarId) {
       let matchingInstructorCalendarEvents = CalendarApp.getCalendarById(instructorCalendarId)
                                                         .getEvents(startTime, endTime, {});
@@ -123,7 +123,7 @@ function deleteAllFutureEvents() {
 // Does NOT touch the main shared calendar. Only use if you really want to delete all existing events!
 // You may have to run this more than once--it seems to time out if there are many items in the calendar.
 function deleteAllFutureInstructorCalendarEvents() {
-  testInstructorCalendars.forEach(function(value, key) {
+  instructorCalendars.forEach(function(value, key) {
       let startDate = new Date();
       // endDate is set for 30 days from now (this method will delete all events in the next 30 days)
       let endDate = new Date(startDate.getTime() + (30 * 24 * 60 * 60 * 1000));

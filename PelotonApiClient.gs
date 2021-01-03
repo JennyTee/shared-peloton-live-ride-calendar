@@ -24,7 +24,7 @@ to run for all class categories, remove &browse_category=${classCategory} from t
 Class category options: 
   cycling, strength, yoga, meditation, cardio, stretching, outdoor, running, walking, bootcamp, bike_bootcamp
 
-(The "bootcamp" category is tread bootcamp only. "Cycling" does not include bike bootcamp.)
+(The "bootcamp" category is tread bootcamp only. The "cycling" category does not include bike bootcamp.)
 */
 
 var classCategory = 'cycling';
