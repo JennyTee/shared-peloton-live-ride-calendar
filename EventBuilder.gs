@@ -33,7 +33,7 @@ function createEvent(ride, actualStartTime, isEncore, rideMetadataId) {
   event = Calendar.Events.insert(event, calendarId);
   
   // Create event in instructor calendar
-  let instructorCalendarId = instructorCalendars.get(instructorName);
+  let instructorCalendarId = !!instructorCalendars ? instructorCalendars.get(instructorName) : null;
   if (!!instructorCalendarId) {
     Calendar.Events.insert(event, instructorCalendarId);
   }
