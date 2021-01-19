@@ -27,10 +27,12 @@ Class category options:
 (The "bootcamp" category is tread bootcamp only. The "cycling" category does not include bike bootcamp.)
 */
 
-var classCategory = 'cycling';
+//making classCategory null to get all categories in response
+var classCategory = null;
 
 var url = `https://api.onepeloton.com/api/v3/ride/live?exclude_complete=true&content_provider=`
-  + `studio&exclude_live_in_studio_only=true&browse_category=${classCategory}&start=${queryStartTime}&end=${queryEndTime}`;
+  + `studio&exclude_live_in_studio_only=true${!!classCategory ? `&browse_category=${classCategory}` : null}`
+  + `&start=${queryStartTime}&end=${queryEndTime}`;
 
 function updatePelotonLiveRideCalendar() {
   // Need to track processed classes since Peloton API sometimes returns duplicate objects
