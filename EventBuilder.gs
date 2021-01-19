@@ -1,3 +1,4 @@
+const testMode = true;
 var calendarId = 'primary';
 
 function createEvent(ride, actualStartTime, isEncore, rideMetadataId) {
@@ -6,6 +7,7 @@ function createEvent(ride, actualStartTime, isEncore, rideMetadataId) {
   
   let summary = buildEventSummary(ride, actualStartTime, isEncore);
   let instructorName = getInstructorName(ride.instructor_id);
+  const classType = ride.fitness_discipline_display_name;
   let event = {
     summary: summary,
     location: instructorName,
@@ -22,7 +24,7 @@ function createEvent(ride, actualStartTime, isEncore, rideMetadataId) {
       shared: {
         classLength: ride.duration / 60,
         classId: ride.id,
-        classType: ride.fitness_discipline_display_name,
+        classType: classType,
         hasClosedCaptions: ride.has_closed_captions,
         instructor: getInstructorName(ride.instructor_id),
         metadataId: rideMetadataId
@@ -31,11 +33,32 @@ function createEvent(ride, actualStartTime, isEncore, rideMetadataId) {
   };
   // Create event in main shared calendar
   event = Calendar.Events.insert(event, calendarId);
+  Utilities.sleep(500);
   
   // Create event in instructor calendar
-  let instructorCalendarId = !!instructorCalendars ? instructorCalendars.get(instructorName) : null;
+  const instructorCalendarId = !!groupCalendars ? groupCalendars.get(instructorName) : null;
   if (!!instructorCalendarId) {
+    Utilities.sleep(500);
     Calendar.Events.insert(event, instructorCalendarId);
+    Logger.log(`Added event to ${instructorName} calendar.`);
+  }
+
+  // Create event in category-specific calendar
+  const categoryCalendarId = !!groupCalendars ? groupCalendars.get(classType.toLowerCase()) : null;
+  if (!!categoryCalendarId) {
+    Calendar.Events.insert(event, categoryCalendarId);
+    Utilities.sleep(500);
+    Logger.log(`Added event to ${classType.toLowerCase()} calendar.`);
+  }
+
+  // Also add cycling & bike bootcamp classes to shared cycling + bike bootcamp calendar
+  if (classType.toLowerCase() === 'cycling' || classType.toLowerCase() === 'bike bootcamp') {
+    const cyclingAndBikeBootcampCalendarId = !!groupCalendars ? groupCalendars.get('cycling + bike bootcamp') : null;
+    if (!!cyclingAndBikeBootcampCalendarId) {
+      Calendar.Events.insert(event, cyclingAndBikeBootcampCalendarId);
+      Utilities.sleep(500);
+      Logger.log(`Added event to cycling + bootcamp calendar.`);
+    }
   }
   
   return event;
@@ -86,15 +109,19 @@ function deleteEventById(eventId) {
     
     // Delete shared calendar event
     event.deleteEvent();
+    Logger.log('main calendar event deleted');
+    Utilities.sleep(500);
     
-    let instructorCalendarId = instructorCalendars.get(instructorName);
+    let instructorCalendarId = groupCalendars.get(instructorName);
     if (!!instructorCalendarId) {
       let matchingInstructorCalendarEvents = CalendarApp.getCalendarById(instructorCalendarId)
                                                         .getEvents(startTime, endTime, {});
       
       // Delete matching instructor calendar event
-      if (!!matchingInstructorCalendarEvents) {
+      if (!!matchingInstructorCalendarEvents && matchingInstructorCalendarEvents.length > 0) {
         matchingInstructorCalendarEvents[0].deleteEvent();
+        Utilities.sleep(500);
+        Logger.log('group calendar event deleted.');
       } 
     }
   } catch(e) {
@@ -119,17 +146,21 @@ function deleteAllFutureEvents() {
   }
 }
 
-// Deletes all existing events in the instructor-specific Google calendars.
+// Deletes all existing events in the instructor- and category-specific Google calendars.
 // Does NOT touch the main shared calendar. Only use if you really want to delete all existing events!
-// You may have to run this more than once--it seems to time out if there are many items in the calendar.
-function deleteAllFutureInstructorCalendarEvents() {
-  instructorCalendars.forEach(function(value, key) {
+// You may have to run this more than once--it may time out if there are many items in the calendar.
+function deleteAllFutureGroupCalendarEvents() {
+  groupCalendars.forEach(function(value, key) {
       let startDate = new Date();
       // endDate is set for 30 days from now (this method will delete all events in the next 30 days)
       let endDate = new Date(startDate.getTime() + (30 * 24 * 60 * 60 * 1000));
       let matchingInstructorCalendarEvents = CalendarApp.getCalendarById(value).getEvents(startDate, endDate, {});                     
       if (!!matchingInstructorCalendarEvents) {
-        matchingInstructorCalendarEvents.forEach(e => e.deleteEvent());
+        matchingInstructorCalendarEvents.forEach(e => {
+          e.deleteEvent();
+          Logger.log('group calendar event deleted');
+          Utilities.sleep(500);
+        });
       }
    });
 }
