@@ -78,6 +78,12 @@ function updatePelotonLiveRideCalendar() {
     
     for(let i = 0; i < existingEvents.size; i++) {
       let eventToRemove = eventsToRemove.next().value;
+
+      // Do not delete events that have already started
+      if (eventToRemove.getStart() < new Date()) {
+        continue;
+      }
+
       deleteEventById(eventToRemove.id);
       removedClassCount++;
       logDeletedEvent(eventToRemove);

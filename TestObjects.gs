@@ -58,7 +58,7 @@ var mockClass = {
             "7579b9edbdf9464fa19eb58193897a73"
          ],
          sample_vod_stream_url:null,
-         scheduled_start_time:1602847800,
+         scheduled_start_time:1611169200,
          series_id:"283319daf8834b86a6205737001b0d56",
          sold_out:false,
          studio_peloton_id:"9a699cdadc3d4bcca887cccfcbba0b63",
@@ -70,12 +70,21 @@ var mockClass = {
          vod_stream_id:"659ac2fe1c894e4fa52343f48bf6eaa6-vod",
          captions:[
             
-         ]
+         ],
+         metadataId:'9a699cdadc3d4bcca887cccfcbba0a88'
       };
       
 
 function createTestEvent() {
-  getPelotonClasses();
+  getUpcomingPelotonCalendarEvents();
+  let existingEvents = getUpcomingPelotonCalendarEvents();
+  let existingEventCount = existingEvents.size;
+  let response = UrlFetchApp.fetch(url, {'muteHttpExceptions': true});
+  let json = response.getContentText();
+  data = JSON.parse(json);
+  
+  instructorList = data.instructors;
+  instructorHashMap = new Map(instructorList.map(i => [i.id, i]));
   
   let calendarId = 'primary';
   let startTime = mockClass.scheduled_start_time * 1000;
@@ -98,6 +107,7 @@ function createTestEvent() {
         classType: mockClass.fitness_discipline_display_name,
         hasClosedCaptions: mockClass.has_closed_captions,
         instructor: getInstructorName(mockClass.instructor_id),
+        metadataId: mockClass.metadataId
       }
   }
   };
