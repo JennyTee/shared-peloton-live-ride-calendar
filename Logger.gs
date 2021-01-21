@@ -1,10 +1,10 @@
 function logCreatedEvent(event) {
-  let logEntry = new LogEntry('Class added', event.getSummary(), event);
+  const logEntry = new LogEntry('Class added', event.getSummary(), event);
   Logger.log(logEntry);
 }
 
 function logDeletedEvent(event) {
-  let logEntry = new LogEntry('Class deleted', event.getSummary(), event);
+  const logEntry = new LogEntry('Class deleted', event.getSummary(), event);
   Logger.log(logEntry);
 }
 
@@ -14,20 +14,20 @@ function logUpdatedEvent(event, eventUpdates) {
 }
 
 function logScriptRun(existingCalendarEventCount, pelotonClassCount, addedClassCount, removedClassCount, updatedClassCount) {
-  let summary = 'Script run completed ' + new Date();
-  let details = {
+  const summary = 'Script run completed ' + new Date();
+  const details = {
     existingClassesInCalendar: existingCalendarEventCount.toFixed(),
     classesFromPelotonApi: pelotonClassCount.toFixed(),
     classesAdded: addedClassCount.toFixed(),
     classesRemoved: removedClassCount.toFixed(),
     classesUpdated: updatedClassCount.toFixed()
   };
-  let logEntry = new LogEntry('Script run', summary, details);
+  const logEntry = new LogEntry('Script run', summary, details);
   Logger.log(logEntry);
 }
 
 function logError(exception) {
-  let logEntry = new LogEntry('Script error', exception, 'No event details available.');
+  const logEntry = new LogEntry('Script error', exception, 'No event details available.');
   Logger.log(logEntry);
 }
     

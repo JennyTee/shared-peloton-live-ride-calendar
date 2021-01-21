@@ -8,7 +8,7 @@ Reference documentation: https://developers.google.com/apps-script/reference/scr
 // Sets up the script to run during the hour specified (24-hour format).
 // For example, if hour = 5, the script will run daily sometime between 5-6am.
 function buildDailyTrigger() {
- let hour = 5;
+ const hour = 5;
  ScriptApp.newTrigger('updatePelotonLiveRideCalendar')
       .timeBased()
       .everyDays(1)
@@ -19,7 +19,7 @@ function buildDailyTrigger() {
 function buildHourlyTrigger() {
   // Sets up the script to run every x hours.
   // For example, if freqeuncyInHours = 1, the script will run every hour.
-  let freqeuncyInHours = 1;
+  const freqeuncyInHours = 1;
   ScriptApp.newTrigger('updatePelotonLiveRideCalendar')
     .timeBased()
     .everyHours(freqeuncyInHours)    
@@ -29,7 +29,7 @@ function buildHourlyTrigger() {
 function buildMinuteTrigger() {
   // Sets up the script to run every x minutes.
   // For example, if freqencyInMinutes = 30, the script will run every 30 minutes.
-  let freqencyInMinutes = 30;
+  const freqencyInMinutes = 30;
   ScriptApp.newTrigger('updatePelotonLiveRideCalendar')
     .timeBased()
     .everyMinutes(freqencyInMinutes)

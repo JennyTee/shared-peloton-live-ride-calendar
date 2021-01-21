@@ -44,7 +44,9 @@ if (!testMode) {
     ['running', 'bmri9j6ro1p4ttdlppmffv6g9k@group.calendar.google.com'],
     ['walking', 'fjp7ks1o4euderjul676m2lob4@group.calendar.google.com'],
     ['tread bootcamp', '9840jare2qcspggq06v9gdthqk@group.calendar.google.com'],
-    ['bike bootcamp', '532gfu22cjibm7i3l5dtsgausg@group.calendar.google.com']
+    ['bike bootcamp', '532gfu22cjibm7i3l5dtsgausg@group.calendar.google.com'],
+    ['outdoor', 'hs7bo2rb85tsmg03f16h5ckps0@group.calendar.google.com'],
+    ['stretching', 'apvp4qtpr4nqsr3uk9duvj3ngc@group.calendar.google.com']
   ]);
 } else {
   groupCalendars = new Map([
