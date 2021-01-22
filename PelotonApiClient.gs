@@ -225,100 +225,28 @@ function deleteEventById(eventId) {
     let event = CalendarApp.getCalendarById(calendarId).getEventById(eventId);
     const startTime = new Date(event.getStartTime());
     const endTime = new Date(startTime.getTime() + 1000);
-    const instructorName = event.getLocation();
     
     // Delete shared calendar event
     event.deleteEvent();
     Logger.log('main calendar event deleted');
     Utilities.sleep(500);
     
+    // Delete matching instructor calendar event, if applicable
+    const instructorName = event.getLocation();
     const instructorCalendarId = groupCalendars.get(instructorName);
     if (!!instructorCalendarId) {
       let matchingInstructorCalendarEvents = CalendarApp.getCalendarById(instructorCalendarId)
                                                         .getEvents(startTime, endTime, {});
       
-      // Delete matching instructor calendar event
       if (!!matchingInstructorCalendarEvents && matchingInstructorCalendarEvents.length > 0) {
         matchingInstructorCalendarEvents[0].deleteEvent();
         Utilities.sleep(500);
-        Logger.log('group calendar event deleted.');
+        Logger.log('instructor calendar event deleted.');
       } 
     }
   } catch(e) {
     logError(e);
   }
-}
-
-// Deletes all existing events in the main shared Google calendar AND instructor-specific calendars.
-// Only use if you really want to delete all existing events!
-// You may have to run this more than once--it seems to time out if there are many items in the calendar.
-function deleteAllFutureEvents() {
-  const startDate = new Date();
-  let events = Calendar.Events.list(calendarId, {
-    timeMin: startDate.toISOString(),
-    singleEvents: true,
-    orderBy: 'startTime',
-    maxResults: 1000
-  });
-  
-  if (events.items && events.items.length > 0) {
-    events.items.forEach(i => deleteEventById(i.id));
-  }
-}
-
-// Deletes all existing events in the instructor- and category-specific Google calendars.
-// Does NOT touch the main shared calendar. Only use if you really want to delete all existing events!
-// You may have to run this more than once--it may time out if there are many items in the calendar.
-function deleteAllFutureGroupCalendarEvents() {
-  groupCalendars.forEach(function(value, key) {
-      const startDate = new Date();
-      // endDate is set for 30 days from now (this method will delete all events in the next 30 days)
-      const endDate = new Date(startDate.getTime() + (30 * 24 * 60 * 60 * 1000));
-      let matchingInstructorCalendarEvents = CalendarApp.getCalendarById(value).getEvents(startDate, endDate, {});                     
-      if (!!matchingInstructorCalendarEvents) {
-        matchingInstructorCalendarEvents.forEach(e => {
-          e.deleteEvent();
-          Logger.log('group calendar event deleted');
-          Utilities.sleep(500);
-        });
-      }
-   });
-}
-
-// used for testing
-function deleteAllEventsAddedByScript() {
-  let existingEvents = getAllPelotonCalendarEventIds();
-  for (let i = 0; i < existingEvents.length; i++) {
-    let eventId = existingEvents[i];
-    deleteEventById(eventId);
-  }
-}
-
-// used for testing
-function getAllPelotonCalendarEventIds() {
-  let eventIds = [];
-  const startDate = new Date(2018, 11, 24, 10, 33, 30, 0);
-  let events = Calendar.Events.list(calendarId, {
-    timeMin: startDate.toISOString(),
-    singleEvents: true,
-    orderBy: 'startTime',
-    maxResults: 500
-  });
-  if (events.items && events.items.length > 0) {
-    for (let i = 0; i < events.items.length; i++) {
-      let event = events.items[i];
-      const extendedProperties = event.getExtendedProperties()
-      if (!extendedProperties) { 
-        continue;
-      }
-      const sharedExtendedProperties = extendedProperties.getShared();
-      if (!!sharedExtendedProperties && sharedExtendedProperties.classId != null) {
-        eventIds.push(event.id);
-      }
-    }
-  }
-
-  return eventIds;
 }
 
 function checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, isEncore, metadataId) {
@@ -416,8 +344,10 @@ function checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, isEn
       endTimeUpdate: endTimeUpdate
     }
 
+    // delete and recreate event
     deleteEventById(existingEvent.id);
     createEvent(pelotonClass, actualStartTime, isEncore, metadataId);
+
     updatedClassCount++;
     logUpdatedEvent(existingEvent, eventUpdates);
   }

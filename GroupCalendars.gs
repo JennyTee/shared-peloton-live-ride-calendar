@@ -10,6 +10,9 @@ Class categories correspond to the Peloton API's fitness_discipline_display_name
 
 var groupCalendars = new Map();
 
+// hard-coded because it requires special treatment
+var cyclingAndBikeBootcampCalendarId = 'il5q5h9b9vqpqg376sj47dc00o@group.calendar.google.com';
+
 if (!testMode) {
   groupCalendars = new Map([
     ['Alex Toussaint', '6pm615s2jnv1efvht6vuf7u1oc@group.calendar.google.com'],
