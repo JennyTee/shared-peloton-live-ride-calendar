@@ -1,5 +1,5 @@
 // Peloton Live Ride Calendar Script
-// Version 1.3.0
+// Version 1.3.1
 
 // Update these variables before script execution, if desired
 const emailForLogs = 'pelotontestcalendar@gmail.com';
@@ -90,7 +90,17 @@ function updatePelotonLiveRideCalendar() {
         continue;
       }
 
-      deleteEventById(eventToRemove.id);
+      // get class category (needed to delete from class category calendar)
+      var classType = null;
+      let extendedProperties = eventToRemove.getExtendedProperties()
+        if (!!extendedProperties) { 
+          let sharedExtendedProperties = extendedProperties.getShared();
+          if (!!sharedExtendedProperties && sharedExtendedProperties.classType != null) {
+            classType = sharedExtendedProperties.classType;
+          }
+        }
+      
+      deleteEventById(eventToRemove.id, classType);
       removedClassCount++;
       logDeletedEvent(eventToRemove);
     }
@@ -220,7 +230,7 @@ function getUpcomingPelotonCalendarEvents() {
   return existingEvents;
 }
 
-function deleteEventById(eventId) {
+function deleteEventById(eventId, classType = null) {
   try {
     let event = CalendarApp.getCalendarById(calendarId).getEventById(eventId);
     const startTime = new Date(event.getStartTime());
@@ -242,7 +252,33 @@ function deleteEventById(eventId) {
         matchingInstructorCalendarEvents[0].deleteEvent();
         Utilities.sleep(500);
         Logger.log('instructor calendar event deleted.');
-      } 
+      }
+    }
+
+    // Delete matching class category calendar event(s), if applicable
+    if (!!classType) {
+      const classCategoryCalendarId = groupCalendars.get(classType.toLowerCase());
+      if (!!classCategoryCalendarId) {
+        let matchingClassCategoryCalendarEvents = CalendarApp.getCalendarById(classCategoryCalendarId)
+                                                             .getEvents(startTime, endTime, {});
+      
+        if (!!matchingClassCategoryCalendarEvents && matchingClassCategoryCalendarEvents.length > 0) {
+          matchingClassCategoryCalendarEvents[0].deleteEvent();
+          Utilities.sleep(500);
+          Logger.log('class category calendar event deleted.');
+        }
+      }
+      if (classType.toLowerCase() === 'bike bootcamp' || classType.toLowerCase() === 'cycling') {
+        // remove from cycling + bike bootcamp calendar, too
+        let matchingCyclingPlusBootcampCalendarEvents = CalendarApp.getCalendarById(cyclingAndBikeBootcampCalendarId)
+                                                             .getEvents(startTime, endTime, {});
+      
+        if (!!matchingCyclingPlusBootcampCalendarEvents && matchingCyclingPlusBootcampCalendarEvents.length > 0) {
+          matchingCyclingPlusBootcampCalendarEvents[0].deleteEvent();
+          Utilities.sleep(500);
+          Logger.log('cycling + bootcamp category calendar event deleted.');
+        }
+      }
     }
   } catch(e) {
     logError(e);
@@ -344,8 +380,18 @@ function checkForEventUpdates(pelotonClass, existingEvent, actualStartTime, isEn
       endTimeUpdate: endTimeUpdate
     }
 
+    // get class category (needed to delete from class category calendar)
+    var classType = null;
+    let extendedProperties = existingEvent.getExtendedProperties()
+      if (!!extendedProperties) { 
+        let sharedExtendedProperties = extendedProperties.getShared();
+        if (!!sharedExtendedProperties && sharedExtendedProperties.classType != null) {
+          classType = sharedExtendedProperties.classType;
+        }
+      }
+      
     // delete and recreate event
-    deleteEventById(existingEvent.id);
+    deleteEventById(existingEvent.id, classType);
     createEvent(pelotonClass, actualStartTime, isEncore, metadataId);
 
     updatedClassCount++;

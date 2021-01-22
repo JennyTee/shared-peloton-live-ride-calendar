@@ -5,8 +5,7 @@ var mockClass = {
          ],
          content_provider:"peloton",
          content_format:"video",
-         description:"Bursts of effort alternated with free weight segments, this ride " +
-           "will challenge your mind and strengthen your body from the inside out.",
+         description:"TESTING TESTING TESTING",
          difficulty_estimate:0.0,
          overall_estimate:0.0,
          difficulty_rating_avg:0.0,
@@ -58,11 +57,11 @@ var mockClass = {
             "7579b9edbdf9464fa19eb58193897a73"
          ],
          sample_vod_stream_url:null,
-         scheduled_start_time:1611169200,
+         scheduled_start_time:1611979200,
          series_id:"283319daf8834b86a6205737001b0d56",
          sold_out:false,
          studio_peloton_id:"9a699cdadc3d4bcca887cccfcbba0b63",
-         title:"45 min Intervals & Arms Ride",
+         title:"TESTING TESTING TESTING",
          total_ratings:0,
          total_in_progress_workouts:0,
          total_workouts:0,
@@ -112,6 +111,9 @@ function createTestEvent() {
   }
   };
   event = Calendar.Events.insert(event, calendarId);
+  Calendar.Events.insert(event, 'stp4rnl5g2e9nq4bq8tm90735k@group.calendar.google.com'); // test cycling calendar
+  Calendar.Events.insert(event, 'fgb9tnv3i5lp5nc3f291mhbqio@group.calendar.google.com'); //Alex T. test calendar
+  Calendar.Events.insert(event, 'k8r8hkfuns4uohf3qj33j7ka3s@group.calendar.google.com'); //Test cycling + bootcamp calendar
 }
 
 // Deletes all existing events in the main shared Google calendar AND instructor-specific calendars.

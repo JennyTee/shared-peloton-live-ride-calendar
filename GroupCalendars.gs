@@ -11,7 +11,12 @@ Class categories correspond to the Peloton API's fitness_discipline_display_name
 var groupCalendars = new Map();
 
 // hard-coded because it requires special treatment
-var cyclingAndBikeBootcampCalendarId = 'il5q5h9b9vqpqg376sj47dc00o@group.calendar.google.com';
+var cyclingAndBikeBootcampCalendarId = '';
+if (!testMode) {
+  cyclingAndBikeBootcampCalendarId = 'il5q5h9b9vqpqg376sj47dc00o@group.calendar.google.com';
+} else {
+  cyclingAndBikeBootcampCalendarId = 'k8r8hkfuns4uohf3qj33j7ka3s@group.calendar.google.com';
+}
 
 if (!testMode) {
   groupCalendars = new Map([
