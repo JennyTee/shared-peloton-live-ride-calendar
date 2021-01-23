@@ -1,5 +1,10 @@
-// Peloton Live Ride Calendar Script
-// Version 1.3.1
+/*
+Peloton Live Ride Calendar Script
+Version 1.3.1
+
+Updates in this version:
+-Add event deletion to class category calendars so that they can handle event updates/cancellations properly
+*/
 
 // Update these variables before script execution, if desired
 const emailForLogs = 'pelotontestcalendar@gmail.com';
