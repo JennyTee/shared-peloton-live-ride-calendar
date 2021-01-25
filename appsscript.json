@@ -1,11 +1,18 @@
 {
   "timeZone": "America/Mexico_City",
   "dependencies": {
-    "enabledAdvancedServices": [{
-      "userSymbol": "Calendar",
-      "serviceId": "calendar",
-      "version": "v3"
-    }]
+    "enabledAdvancedServices": [
+      {
+        "userSymbol": "Calendar",
+        "serviceId": "calendar",
+        "version": "v3"
+      },
+      {
+        "userSymbol": "Sheets",
+        "version": "v4",
+        "serviceId": "sheets"
+      }
+    ]
   },
   "exceptionLogging": "STACKDRIVER",
   "runtimeVersion": "V8"

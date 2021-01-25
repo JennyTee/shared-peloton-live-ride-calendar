@@ -1,13 +1,14 @@
 /*
 Peloton Live Ride Calendar Script
-Version 1.3.1
+Version 1.4.0
 
 Updates in this version:
--Add event deletion to class category calendars so that they can handle event updates/cancellations properly
+-Script execution data writes to Google Sheet
 */
 
 // Update these variables before script execution, if desired
 const emailForLogs = 'pelotontestcalendar@gmail.com';
+const spreadsheetId = '1uzdKrw4zq1DghnPqkFOL7hs-1BdE6H62VEOMJSQQlIE';
 var testMode = true;
 
 // Do not update these variables

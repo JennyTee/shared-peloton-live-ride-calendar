@@ -66,4 +66,3 @@ if (!testMode) {
     ['yoga', 'b65gmqehsufal3ss2rd1ctu9o8@group.calendar.google.com']
   ]);
 }
-
