@@ -1,9 +1,9 @@
 /*
 Peloton Live Ride Calendar Script
-Version 1.4.0
+Version 1.4.1
 
 Updates in this version:
--Script execution data writes to Google Sheet
+-Use locale time string in date columns for logging Sheet
 */
 
 // Update these variables before script execution, if desired

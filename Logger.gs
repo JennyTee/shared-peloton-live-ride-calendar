@@ -7,9 +7,9 @@ function logCreatedEvent(event) {
   const extendedProperties = event.getExtendedProperties();
   const sharedProperties = extendedProperties.getShared();
   dataForSheet.push([
-    new Date(),
+    new Date().toLocaleString(),
     'class added',
-    event.getStart().getDateTime(),
+    new Date(event.getStart().getDateTime()).toLocaleString(),
     event.getSummary(),
     sharedProperties.classType,
     event.getLocation(),
@@ -24,9 +24,9 @@ function logDeletedEvent(event) {
   const extendedProperties = event.getExtendedProperties();
   const sharedProperties = extendedProperties.getShared();
   dataForSheet.push([
-    new Date(),
+    new Date().toLocaleString(),
     'class deleted',
-    event.getStart().getDateTime(),
+    new Date(event.getStart().getDateTime()).toLocaleString(),
     event.getSummary(),
     sharedProperties.classType,
     event.getLocation(),
@@ -41,9 +41,9 @@ function logUpdatedEvent(event, eventUpdates) {
   const extendedProperties = event.getExtendedProperties();
   const sharedProperties = extendedProperties.getShared();
   dataForSheet.push([
-    new Date(),
+    new Date().toLocaleString(),
     'class updated',
-    event.getStart().getDateTime(),
+    new Date(event.getStart().getDateTime()).toLocaleString(),
     event.getSummary(),
     sharedProperties.classType,
     event.getLocation(),
