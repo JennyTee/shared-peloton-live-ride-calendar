@@ -1,9 +1,9 @@
 /*
 Peloton Live Ride Calendar Script
-Version 1.4.1
+Version 1.5.0
 
 Updates in this version:
--Use locale time string in date columns for logging Sheet
+-Add new instructors Brad/Mariana/Nico/Kirra
 */
 
 // Update these variables before script execution, if desired
@@ -191,7 +191,7 @@ function createEvent(ride, actualStartTime, isEncore, rideMetadataId) {
   // Dreaming of the day this will happen...
   if (classType.toLowerCase() === 'stretching' || classType.toLowerCase() === 'outdoor') {
     const classUrl = `https://members.onepeloton.com/schedule/cycling?modal=scheduledClassDetails&liveId=${rideMetadataId}`;
-    const message = `HOLY MOLY! A live (or encore) ${classType.toLowerCase()} class has been created. Check it out here: `;
+    const message = `HOLY MOLY! A live (or encore) ${classType.toLowerCase()} class has been created. Check it out here: ${classUrl}`;
     const subject = `Live ${classType.toLowerCase()} created`;
 
     MailApp.sendEmail(emailForLogs, subject, message);
